@@ -115,8 +115,11 @@ qui {
 				
 				global data : di "${root}${slash}data${slash}pilot"
 				global table_p : di "${root}${slash}table"
-				
-				capture mkdir "${data}"
+
+				capture mkdir data
+				cd "${root}${slash}data"
+				capture mkdir "pilot"
+				cd "${root}"
 				capture mkdir "${table_p}"
 				
 				cd "${data}"
