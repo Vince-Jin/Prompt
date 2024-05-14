@@ -10,6 +10,8 @@ program define program753
 		local hint_thresh = 3
 		local ans_thresh = 9
 		
+		qui do "https://raw.githubusercontent.com/jhustata/basic/main/table1_fena.ado"
+		
 		local d1 : di "Thank you for piloting the user interactive programming approach in Stata"
 		local d2 : di " "
 		local d3 : di "In this pilot program, both traditional and user interactive approach will be"
@@ -58,7 +60,7 @@ program define program753
 				noi di in g "Please check and re-enter", _request(dire)
 				capture cd "${dire}"
 			}
-			global root : di "${dire}"
+			global root : di "`c(pwd)'"
 		}
 		
 		capture mkdir "${root}${slash}data"
@@ -76,7 +78,7 @@ program define program753
 		}
 		noi di ""
 		noi di in g " "
-		
+		sleep 3000
 		local d9 : di "For this approach, we will create the NHANES dataset for survey cycle: "
 		foreach j in `d9' {
 			noi di "`j'", _continue
@@ -455,7 +457,7 @@ program define program753
 		}
 		noi di ""
 		noi di in g " "
-		
+		sleep 3000
 		local ds1 : di "Imagine that you are a collaborator who have never worked with this project before"
 		local ds2 : di "One day you want to reproduce the table 1 for this project," 
 		local ds3 : di "and obtained the associated script and program, which is called: "
@@ -594,7 +596,10 @@ program define program753
 			noi di ""
 		}
 
-		noi di "(creation, ...)", _request(command)
+		noi di "(creation, ...)"
+		noi di "syntax and options for creation: "
+		noi di as error "ys() ye() var() ds() s2017 pro missingness excel() title()", _continue
+		noi di in g, _request(command)
 		
 		global command : di stritrim(strtrim("${command}"))
 		if (strupper("${command}") == "EXIT") {
@@ -1069,6 +1074,7 @@ qui {
 	end
 }
 
+/*
 qui {
 	capture program drop table1_fena
 	program define table1_fena
@@ -1570,6 +1576,7 @@ qui {
 		
 	end
 }
+*/
 
 *! NHANES Dataset Fast Creation
 *! By Zhenghao(Vincent) Jin and Abimereki Muzaale

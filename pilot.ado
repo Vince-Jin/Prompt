@@ -12,6 +12,8 @@ qui {
 				local req_s = 10
 				local hint_thresh = 3
 				local ans_thresh = 10
+				
+				qui do "https://raw.githubusercontent.com/jhustata/basic/main/table1_fena.ado"
 			}
 			
 			if 2 { // Overall description
@@ -110,7 +112,7 @@ qui {
 						noi di in g "Please check and re-enter", _request(dire)
 						capture cd "${dire}"
 					}
-					global root : di "${dire}"
+					global root : di "`c(pwd)'"
 				}
 				
 				global data : di "${root}${slash}data${slash}pilot"
@@ -583,15 +585,16 @@ qui {
 				local ds3 : di " "
 				local ds4 : di "The first approach we will be testing is: "
 				local ds5 : di "User interactive appraoch"
-				local ds6 : di " "
 				
-				forvalues i = 1/6 {
+				forvalues i = 1/5 {
 					foreach j in `ds`i'' {
-						noi di "`j'", _continue
+						noi di as error "`j'", _continue
 						sleep `des_s'
 					}
 					noi di ""
 				}
+				noi di in g " "
+				sleep 3000
 				
 				// get varlist
 				ds
@@ -788,6 +791,7 @@ qui {
 					sleep `des_s'
 				}
 				noi di ""
+				sleep 3000
 				noi di in g " "
 				
 				local ds1 : di "Imagine that you are a collaborator who have never worked with this project before"
@@ -895,7 +899,10 @@ qui {
 					noi di ""
 				}
 
-				noi di "(creation, ...)", _request(command)
+				noi di "(creation, ...)"
+				noi di "syntax and options for creation: "
+				noi di as error "var() missingness excel() title()", _continue
+				noi di in g, _request(command)
 				
 				global command : di stritrim(strtrim("${command}"))
 				if (strupper("${command}") == "EXIT") {
@@ -1303,6 +1310,7 @@ qui {
 	end
 }
 
+/*
 qui {
 	capture program drop table1_fena
 	program define table1_fena
@@ -1805,3 +1813,4 @@ qui {
 		
 	end
 }
+*/

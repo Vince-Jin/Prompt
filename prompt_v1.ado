@@ -67,7 +67,7 @@ qui {
 						noi di in g "Please check and re-enter", _request(dire)
 						capture cd "${dire}"
 					}
-					global root : di "${dire}"
+					global root : di "`c(pwd)'"
 				}
 				
 				capture mkdir "${root}${slash}data"
@@ -148,12 +148,19 @@ qui {
 			if 7 { // display scenario information
 				local ds1 : di "The first approach we will be testing is: "
 				local ds2 : di "User interactive appraoch"
-				local ds3 : di " "
+				forvalues i = 1/2 {
+					foreach j in `ds`i'' {
+						noi di as error "`j'", _continue
+						sleep `req_s'
+					}
+				}
+				noi di in g " "
+				sleep 3000
 				timer clear 1
 				timer on 1
 				local ds4 : di "In this approach, we would like to conduct a table 1 on these variables: "
 				local ds5 : di "`vars_list'"
-				forvalues i = 1/5 {
+				forvalues i = 4/5 {
 					foreach j in `ds`i'' {
 						noi di "`j'", _continue
 						sleep `req_s'
@@ -317,14 +324,17 @@ qui {
 				}
 				noi di " "
 				local ds1 : di "The second approach that will be tested is: Traditional Syntax Approach"
-				timer clear 2
-				timer on 2
+				
 				foreach i in `ds1' {
 					noi di as error "`i'", _continue
 					sleep `des_s'
 				}
 				noi di ""
 				noi di in g " "
+				
+				sleep 3000
+				timer clear 2
+				timer on 2
 			}
 			
 			if 9 { // description for traditional
@@ -456,9 +466,12 @@ qui {
 					noi di ""
 				}
 
-				noi di "(creation, ...)", _request(command)
+				noi di "(creation, ...)"
+				noi di "syntax and options for creation: "
+				noi di as error "var() missingness excel() title()", _continue
+				noi di in g, _request(command)
 				
-				global command : di stritrim(strtrim("${command}"))
+				global command : di strtrim(stritrim("${command}"))
 				if (strupper("${command}") == "EXIT") {
 					noi di " "
 					noi di as error "Program Terminated"
