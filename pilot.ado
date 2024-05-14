@@ -5,8 +5,6 @@ qui {
 			
 			if 1 { // set up macros
 				clear
-				macro drop all
-				cls
 				
 				local des_s = 10
 				local req_s = 10

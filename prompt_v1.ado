@@ -3,7 +3,6 @@ qui {
 	program define prompt_v1
 		qui {
 			if 1 {
-				cls
 				clear
 				set varabbrev on
 				set more off
@@ -692,8 +691,6 @@ qui {
 								noi di " "
 								noi di "Here is a list of mandatory options:"
 								noi di "var()"
-								noi di "pro - this one is a special option that makes program operate"
-								noi di "s2017 - this one is a special option for proper dataset creation"
 								if ("`missingness'" == "missingness") {
 									noi di "missingness - this tells the program to include missingness info in table 1"
 								}

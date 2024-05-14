@@ -2,8 +2,7 @@ capture program drop program753
 program define program753
 	qui {
 		
-		macro drop all
-		cls
+		clear
 		
 		local des_s = 10
 		local req_s = 10
