@@ -3,6 +3,7 @@ qui {
 	if 1 {
 		cls
 		clear
+		macro drop all
 		set more off
 		set varabbrev on
 	}
