@@ -3,9 +3,10 @@ qui {
 	if 1 {
 		cls
 		clear
-		macro drop all
 		set more off
 		set varabbrev on
+		timer clear
+		macro drop _all
 	}
 	
 	if 3 {
@@ -41,7 +42,7 @@ qui {
 	if 2 {
 		noi di "Now loading dofiles for piloting: "
 		noi di "Demostration....................................................", _continue
-		/* qui do "" */
+		qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/demo.ado"
 		noi di "Done"
 		noi di "Introductory Level..............................................", _continue
 		qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/prompt_v1.ado"
@@ -71,7 +72,8 @@ qui {
 		else {
 			local c_helper : di strupper(substr("${confirm}", 1, 1))
 			if (("`c_helper'" == "Y") | ("`c_helper'" == "1")) {
-				/* noi demo */
+				qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/demo.ado"
+				noi demo
 			}
 			else {
 				noi di "Ok! Let's skip demo."
