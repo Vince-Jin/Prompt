@@ -4,7 +4,7 @@ qui {
 
 		qui {
 			
-			syntax [if] [, var(string) by(varname) title(string) excel(string) catt(int 15) missingness]
+			syntax [if] [, var(string) by(varname) title(string) excel(string) catt(int 15) missingness pro]
 			
 			// first detect varaible type
 			if 1 {
@@ -15,7 +15,12 @@ qui {
 					local var_helper = r(varlist)
 					local var : di stritrim(subinstr("`var_helper'", "`by'", "", .))
 				}
-				noi var_type, var(`var') catt(`catt')
+				if ("`pro'" != "pro") {
+					noi var_type, var(`var') catt(`catt')
+				}
+				else if ("`pro'" == "pro") {
+					qui var_type, var(`var') catt(`catt')
+				}
 				if (strupper("${terminator}") == "EXIT") {
 					exit
 				}				
@@ -25,54 +30,60 @@ qui {
 				
 				// double verify the variable types 
 				// ask for user input
-				noi di "Please indicate variables to modify, separated by space (e.g.: aaa bbb ccc)"
-				noi di "Press enter to skip modification", _request(var_change)
-				if ("${var_change}" != "") {
-					local bstring : di "${bin}"
-					local castring : di "${cat}"
-					local costring : di "${con}"
-					foreach i in ${var_change} {
-						
-						noi di "Please enter the correct variable type for" " variable " "`i'" " (1-binary 2-categorical 3-continuous):", _request(vtype)
-						
-						local bstring : di subinstr("`bstring'", "`i'", "", 1)
-						local castring : di subinstr("`castring'", "`i'", "", 1)
-						local costring : di subinstr("`costring'", "`i'", "", 1)
-						
-						if (${vtype} == 1) {
-							local bstring : di "`bstring'" " " "`i'"
-						}
-						else if (${vtype} == 2) {
-							local castring : di "`castring'" " " "`i'"
-						}
-						else if (${vtype} == 3) {
-							local costring : di "`costring'" " " "`i'"
-						}
-						
-						local bstring : di stritrim(strtrim("`bstring'"))
-						local castring : di stritrim(strtrim("`castring'"))
-						local costring : di stritrim(strtrim("`costring'"))
+				if ("`pro'" != "pro") {
+					noi di "Please indicate variables to modify, separated by space (e.g.: aaa bbb ccc)"
+					noi di "Press enter to skip modification", _request(var_change)
+					if ("${var_change}" != "") {
+						local bstring : di "${bin}"
+						local castring : di "${cat}"
+						local costring : di "${con}"
+						foreach i in ${var_change} {
+							
+							noi di "Please enter the correct variable type for" " variable " "`i'" " (1-binary 2-categorical 3-continuous):", _request(vtype)
+							
+							local bstring : di subinstr("`bstring'", "`i'", "", 1)
+							local castring : di subinstr("`castring'", "`i'", "", 1)
+							local costring : di subinstr("`costring'", "`i'", "", 1)
+							
+							if (${vtype} == 1) {
+								local bstring : di "`bstring'" " " "`i'"
+							}
+							else if (${vtype} == 2) {
+								local castring : di "`castring'" " " "`i'"
+							}
+							else if (${vtype} == 3) {
+								local costring : di "`costring'" " " "`i'"
+							}
+							
+							local bstring : di stritrim(strtrim("`bstring'"))
+							local castring : di stritrim(strtrim("`castring'"))
+							local costring : di stritrim(strtrim("`costring'"))
 
-						
+							
+						}
+						global bin `bstring'
+						global cat `castring'
+						global con `costring'
+						noi di "Current Variable Types: "
+						noi di "Binary Variables:"
+						noi di "${bin}"
+						noi di "Categorical Variables: "
+						noi di "${cat}"
+						noi di "Continuous Variables: "
+						noi di "${con}"
 					}
-					global bin `bstring'
-					global cat `castring'
-					global con `costring'
-					noi di "Current Variable Types: "
-					noi di "Binary Variables:"
-					noi di "${bin}"
-					noi di "Categorical Variables: "
-					noi di "${cat}"
-					noi di "Continuous Variables: "
-					noi di "${con}"
 				}
 				
 				// call the table1 program generate table 1
-				noi di as error "Generating Table1"
+				if ("`pro'" != "pro") {
+					noi di as error "Generating Table1"
+				}
 				noi table1_creation `if', bin(${bin}) cat(${cat}) con(${con}) title(`title') excel(`excel') by(`by') `missingness' orders(`var')
 				noi di ""
-				noi di as error "Table 1 saved as `excel' to the following directory:"
-				noi di in g "`c(pwd)'"
+				if ("`pro'" != "pro") {
+					noi di as error "Table 1 saved as `excel' to the following directory:"
+					noi di in g "`c(pwd)'"
+				}
 			}
 			
 		}
