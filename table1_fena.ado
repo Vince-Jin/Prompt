@@ -8,7 +8,10 @@ qui {
 			
 			// first detect varaible type
 			if 1 {
-				noi di "Detecting Variable Types"
+				global pro
+				if ("`pro'" != "pro") {
+					noi di "Detecting Variable Types"
+				}
 				// in case only by variable was specified
 				if (("`by'" != "") & ("`var'" == "")) {
 					ds
@@ -19,14 +22,15 @@ qui {
 					noi var_type, var(`var') catt(`catt')
 				}
 				else if ("`pro'" == "pro") {
-					qui var_type, var(`var') catt(`catt')
+					noi var_type, var(`var') catt(`catt') prov
 				}
 				if (strupper("${terminator}") == "EXIT") {
 					exit
-				}				
+				}	
 				if (strupper("${terminator}") != "EXIT") {
 					noi missing_detect, v(${terminator})
 				}
+				
 				
 				// double verify the variable types 
 				// ask for user input
@@ -73,6 +77,19 @@ qui {
 						noi di "${con}"
 					}
 				}
+				else {
+					local bstring : di "${bin}"
+					local castring : di "${cat}"
+					local costring : di "${con}"
+					
+					local bstring : di stritrim(strtrim("`bstring'"))
+					local castring : di stritrim(strtrim("`castring'"))
+					local costring : di stritrim(strtrim("`costring'"))
+					
+					global bin `bstring'
+					global cat `castring'
+					global con `costring'
+				}
 				
 				// call the table1 program generate table 1
 				if ("`pro'" != "pro") {
@@ -103,8 +120,7 @@ qui {
 			// default should be everything
 			// end product:
 			// three global macro to for binary, categorical, continuous variables
-			syntax [, var(string) catt(int 15)]
-			
+			syntax [, var(string) catt(int 15) prov]
 			// sets up proper variable list for action
 			if ("`var'" != "") {
 				local vlist `var'
@@ -115,8 +131,13 @@ qui {
 			}
 			
 			// determine if any of the variable specified is not in the dataset
-			noi missing_detect, v(`vlist')
-
+			if ("`prov'" != "prov") {
+				noi missing_detect, v(`vlist')
+			}
+			else {
+				global pro : di "pro"
+				qui missing_detect, v(`vlist')
+			}
 			if (strupper("${terminator}") == "EXIT") {
 				noi di as error "WARNING: User Requested To Terminate The Program"
 				exit
@@ -164,16 +185,18 @@ qui {
 			}
 			
 			// display results
-			noi di "Detected binary variables: "
-			noi di "${bin}"
-			noi di "Detected categorical variables: "
-			noi di "${cat}"
-			noi di "Detected continuous variables: "
-			noi di "${con}"
-			
-			if ("${tran}" != "") {
-				noi di as error "WARNING: Variables Require User Attention"
-				noi di in g "${tran}"
+			if ("`prov'" != "prov") {
+				noi di "Detected binary variables: "
+				noi di "${bin}"
+				noi di "Detected categorical variables: "
+				noi di "${cat}"
+				noi di "Detected continuous variables: "
+				noi di "${con}"
+				
+				if ("${tran}" != "") {
+					noi di as error "WARNING: Variables Require User Attention"
+					noi di in g "${tran}"
+				}
 			}
 			
 			
@@ -187,6 +210,7 @@ qui {
 			syntax, v(string)
 			ds
 			local testing `r(varlist)'
+
 			local missing
 			foreach i in `v'{	
 				if (strpos("`testing'", "`i'") == 0) {
@@ -196,10 +220,12 @@ qui {
 			}
 			
 			if ("`missing'" == "") {
-				noi di in g "Variable check cleared"
-				global terminator `v'
+				if ("${pro}" != "pro") {
+					noi di in g "Variable check cleared"
+				}
+					global terminator `v'
 			}
-			else if ("`missing'" != "") {				
+			else {				
 				noi di ""
 				noi di in g "Variables below not found in current dataset: "
 				noi di "`missing'"
