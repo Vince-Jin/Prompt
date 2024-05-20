@@ -90,6 +90,7 @@ qui {
 				capture mkdir v1
 				cd "${data_p}${slash}v1"
 				save "v1_data.dta", replace
+				sleep 1000
 				noi di "`c(N)' Data Successfully Read In"
 				cd "${root}"
 			}
@@ -145,6 +146,7 @@ qui {
 			}
 			
 			if 7 { // display scenario information
+				noi di " "
 				local ds1 : di "The first approach we will be testing is: "
 				local ds2 : di "User interactive appraoch"
 				forvalues i = 1/2 {
@@ -154,6 +156,7 @@ qui {
 					}
 				}
 				noi di in g " "
+				noi di " "
 				sleep 3000
 				timer clear 1
 				timer on 1
@@ -167,12 +170,14 @@ qui {
 					noi di ""
 				}
 				if (`mis_helper' == 1) {
-					noi di "Please make sure to include missingness information"
+					noi di as error "Please make sure to include missingness information"
 				}
 				else if (`mis_helper' == 0) {
-					noi di "Please make sure to NOT include missingness information"
+					noi di as error "Please make sure to NOT include missingness information"
 				}
-				
+				noi di in g " "
+				noi di "Therefore, the table1 from analytic goal should be like: "
+				noi table1_fena, var(`vars_list') `missingness' pro
 				local ds1 : di "(Please hit enter for continue)"				
 				foreach i in `ds1' {
 					noi di "`i'", _continue
@@ -193,7 +198,7 @@ qui {
 			if 8 { // creation
 				noi di " "
 				noi di "User Interactive Table 1 Creation: "
-				noi di "Please enter variables to be included in: "
+				noi di "Please enter variables to be included in table to achieve analytic goal: "
 				noi di "Separated by space"
 				noi di "(E.g.: to enter variable aaa and bbb and ccc -> aaa bbb ccc)", _request(var)
 				global var : di stritrim(strtrim("${var}"))
@@ -226,7 +231,7 @@ qui {
 				}
 				
 				// missingness
-				noi di "Do you want to incluide missingness information in table 1?"
+				noi di "Does the analytic goal requires missingness information in table 1?"
 				noi di "(Yes - 1/Y No - 0/N)", _request(mis)
 				
 				global mis : di strlower(strtrim(stritrim("${mis}")))
@@ -303,8 +308,8 @@ qui {
 				capture mkdir "user interactive"
 				cd "${table_p}${slash}v1${slash}user interactive"
 				shell ${del} *.xlsx
-				qui do "https://raw.githubusercontent.com/jhustata/basic/main/table1_fena.ado"
-				noi table1_fena, var(${var}) `title' `excel' `missingness'
+				qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/table1_fena.ado"
+				noi table1_fena, var(${var}) `title' `excel' `missingness' pro
 				cd "${root}"
 				timer off 1
 				qui timer list
@@ -429,12 +434,14 @@ qui {
 					noi di ""
 				}
 				if (`mis_helper' == 1) {
-					noi di "Please make sure to include missingness information"
+					noi di as error "Please make sure to include missingness information"
 				}
 				else if (`mis_helper' == 0) {
-					noi di "Please make sure to NOT include missingness information"
+					noi di as error "Please make sure to NOT include missingness information"
 				}
-				
+				noi di in g " "
+				noi di "Therefore, the table1 from analytic goal should be like: "
+				noi table1_fena, var(`vars_list') `missingness' pro
 				local ds1 : di "(Please hit enter for continue)"				
 				foreach i in `ds1' {
 					noi di "`i'", _continue
@@ -454,10 +461,10 @@ qui {
 			
 			if 12 { // ask for creation
 				noi di in g " "
-				local ds1 : di "Please enter the correct call for the program with all appropriate syntax options: "
+				local ds1 : di "Please enter the correct call for the program with all appropriate syntax options"
+				local ds2 : di "To acheieve the analytic goal: "
 
-				
-				forvalues i = 1/1 {
+				forvalues i = 1/2 {
 					foreach j in `ds`i'' {
 						noi di "`j'", _continue
 						sleep `req_s'
@@ -470,7 +477,7 @@ qui {
 				noi di as error "var() missingness excel() title()", _continue
 				noi di in g, _request(command)
 				
-				global command : di strtrim(stritrim("${command}"))
+				global command : di subinstr(strtrim(stritrim(`"${command}"')), `"""', "", .)
 				if (strupper("${command}") == "EXIT") {
 					noi di " "
 					noi di as error "Program Terminated"
@@ -531,7 +538,7 @@ qui {
 					
 					noi di "One or more mandatory options are missing in the call."
 					noi di "Please check and try again", _request(command)
-					global command : di stritrim(strtrim("${command}"))
+					global command : di subinstr(strtrim(stritrim(`"${command}"')), `"""', "", .)
 					if (strupper("${command}") == "EXIT") {
 						noi di " "
 						noi di as error "Program Terminated"
@@ -650,7 +657,7 @@ qui {
 					noi di "`errors'"
 					noi di "Please try again", _request(command)
 					
-					global command : di stritrim(strtrim("${command}"))
+					global command : di subinstr(strtrim(stritrim(`"${command}"')), `"""', "", .)
 					if (strupper("${command}") == "EXIT") {
 						noi di " "
 						noi di as error "Program Terminated"
@@ -702,7 +709,7 @@ qui {
 						noi di "Please check and try again", _request(command)
 						
 						
-						global command : di stritrim(strtrim("${command}"))
+						global command : di subinstr(strtrim(stritrim(`"${command}"')), `"""', "", .)
 						if (strupper("${command}") == "EXIT") {
 							noi di " "
 							noi di as error "Program Terminated"
@@ -835,7 +842,7 @@ qui {
 			capture mkdir "syntax"
 			cd "${table_p}${slash}v1${slash}syntax"
 			shell ${del} *.xlsx
-			noi table1_fena, var(`var') `missingness' excel(`excel') title(`title')
+			noi table1_fena, var(`var') `missingness' excel(`excel') title(`title') pro
 			cd "${root}"
 		}
 	end
