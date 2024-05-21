@@ -13,6 +13,7 @@ qui {
 				local req_s = 10 // request prompt related text displaying speed
 				local hint_thresh = 3 // display hints after how many tries
 				local ans_thresh = 9 // display answer after how many tries for traditional
+				qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/table1_fena.ado"
 			}
 			
 			if 3 { // display the description and instructions
