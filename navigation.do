@@ -12,17 +12,11 @@ qui {
 	if 3 {
 		noi di "Thank you so much for participating in the piloting program for prompt based programming approach!"
 		noi di " "
-		noi di "In this program, we will run 3 sets of programs to complete"
-		noi di "3 analytic goals. In each set of programs, you will first experience"
-		noi di "a prompt-based program and then experience a traditional syntax based"
-		noi di "program. They are exactly the same programs, just with different approaches."
+		noi di "In this program, we will run  programs to complete certain "
+		noi di "analytic goals. You will first experience a prompt-based program "
+		noi di "and then experience a traditional syntax based program. "
+		noi di "They are exactly the same programs, just with different approaches."
 		noi di "Please read carefully about the instructions in each scenario."
-		noi di " "
-		noi di "After all 3 sets were completed, a log file with all running times will be"
-		noi di "automatically generated under the working directory."
-		noi di "Based on the log file generated and your experience, please answer our"
-		noi di "user experiences at the end data collection summary on the Google sheet"
-		noi di "through the link that was provided."
 		noi di " "
 		noi di "At anytime you wish to exit the program, please just enter: EXIT"
 		noi di "Through the command window/console."
@@ -44,20 +38,22 @@ qui {
 		noi di "Demostration....................................................", _continue
 		qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/demo.ado"
 		noi di "Done"
-		noi di "Introductory Level..............................................", _continue
+		noi di "Piloting Program................................................", _continue
 		qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/prompt_v1.ado"
 		noi di "Done"
+		/*
 		noi di "Intermediate Level..............................................", _continue
 		qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/pilot.ado"
 		noi di "Done"
 		noi di "Advanced Level..................................................", _continue
 		qui do "https://raw.githubusercontent.com/Vince-Jin/Prompt/main/program753.ado"
 		noi di "Done"
+		*/
 		noi di " "
 	}
 	
 	if 3 { // ask for levels to exclude
-		noi di "Before we actually get to the 3 sets of programs, "
+		noi di "Before we actually get to real of programs, "
 		noi di "do you wish to try a demo to experience what is going to happen?"
 		noi di "(1/Y - Yes, 0/N - No)", _request(confirm)
 		
@@ -83,9 +79,13 @@ qui {
 	}
 	
 	if 4 {
-		noi di as error "Introductory Level: "
+		noi di as error "Pilot Program: "
+		/*
 		noi di in g "Do you wish to skip this level?"
 		noi di "(1/Y - Yes, 0/N - No)", _request(skip)
+		*/
+		global skip : di "N"
+		noi di in g " "
 		if (strupper("${skip}") == "EXIT") {
 			noi di " "
 			noi di as error "Program Terminated"
@@ -105,7 +105,7 @@ qui {
 		noi di " "
 	}
 	
-	if 5 {
+	if 0 {
 		noi di as error "Intermediate Level: "
 		noi di in g "Do you wish to skip this level?"
 		noi di "(1/Y - Yes, 0/N - No)", _request(skip)
@@ -128,7 +128,7 @@ qui {
 		noi di " "
 	}
 	
-	if 6 {
+	if 0 {
 		noi di as error "Advanced Level: "
 		noi di in g "Do you wish to skip this level?"
 		noi di "(1/Y - Yes, 0/N - No)", _request(skip)
@@ -156,10 +156,11 @@ qui {
 		noi di "Generating the log file for running time: "
 		capture log close
 		log using pilot_log.txt, text replace
-		noi di "Running time for Introductory Level: "
+		noi di "Running time for Pilot Programs: "
 		noi di "Prompt Based (Q1): ${srt1}"
 		noi di "Traditional (Q2): ${srt2}"
 		noi di " "
+		/*
 		noi di "Running time for Intermediate Level: "
 		noi di "Prompt Based (Q4): ${irt1}"
 		noi di "Traditional (Q5): ${irt2}"
@@ -167,6 +168,7 @@ qui {
 		noi di "Running time for Advanced Level: "
 		noi di "Prompt Based (Q7): ${crt1}"
 		noi di "Traditional (Q8): ${crt2}"
+		*/
 		noi di " "
 		capture log close
 		noi di "Log file succesfully generated!"
